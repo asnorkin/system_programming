@@ -38,7 +38,7 @@ void ErrorExitMsgBox(PTSTR);
 
 void debugDump(PTSTR lpszFunction) {
 	return;
-	MessageBox(NULL, (LPCTSTR)lpszFunction, TEXT("Error"), MB_OK);
+	//MessageBox(NULL, (LPCTSTR)lpszFunction, TEXT("Error"), MB_OK);
 }
 
 
