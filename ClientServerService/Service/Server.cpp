@@ -38,7 +38,7 @@ void ErrorExitMsgBox(PTSTR);
 
 void debugDump(PTSTR lpszFunction) {
 	return;
-	//MessageBox(NULL, (LPCTSTR)lpszFunction, TEXT("Error"), MB_OK);
+	MessageBox(NULL, (LPCTSTR)lpszFunction, TEXT("Error"), MB_OK);
 }
 
 
@@ -58,7 +58,8 @@ int runServerProcess()
 	struct addrinfo *result = NULL;
 	struct addrinfo hints;
 
-	struct sockaddr_in server, address;
+	// struct sockaddr_in server, address;
+	struct sockaddr_in address;
 	int addrlen = sizeof(struct sockaddr_in);
 
 	// Pool of sockets
@@ -66,7 +67,7 @@ int runServerProcess()
 
 	// Send-receive vars
 	int iResult;
-	int iSendResult;
+	// int iSendResult;
 	char recvbuf[DEFAULT_BUFLEN];
 	int recvbuflen = DEFAULT_BUFLEN;
 
@@ -214,7 +215,7 @@ int InitNewClientConnection(int idx) {
 		NULL,                   // default security attributes
 		0,                      // use default stack size
 		listenAndSend,			// thread function name
-		&idx,					// argument to thread function
+		(LPVOID)idx,					// argument to thread function
 		0,                      // use default creation flags
 		&(dwThreadId[idx]));
 
@@ -330,13 +331,13 @@ void WriteToPipe(char* buf, int idx)
 {
 	DWORD dwRead, dwWritten;
 	BOOL bSuccess = FALSE;
-	dwRead = strlen(buf);
+	dwRead = (DWORD)strlen (buf);
 	bSuccess = WriteFile(g_hChildStd_IN_Wr[idx], buf, dwRead, &dwWritten, NULL);
 }
 
 int ReadFromPipe(char* buf, int idx)
 {
-	DWORD dwRead, dwWritten;
+	DWORD dwRead;
 	CHAR chBuf[BUFSIZE];
 	ZeroMemory(chBuf, BUFSIZE);
 
@@ -348,7 +349,7 @@ int ReadFromPipe(char* buf, int idx)
 
 DWORD WINAPI listenAndSend(LPVOID lpParam)
 {
-	int idx = *((int *)lpParam);
+	int idx = (int)lpParam;
 
 	char recvbuf[DEFAULT_BUFLEN];
 	int recvbuflen = DEFAULT_BUFLEN;
@@ -393,3 +394,4 @@ void ErrorExitMsgBox(PTSTR lpszFunction)
 	LocalFree(lpDisplayBuf);
 	ExitProcess(1);
 }
+
