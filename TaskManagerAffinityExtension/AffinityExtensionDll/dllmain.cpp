@@ -12,7 +12,6 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
-		InfoLog("Init msg");
 		if (!hookFuncByName(SET_WINDOW_LONG_PTR_W, (ULONG_PTR)HookedSetWindowLongPtrW))
 			InfoLog("hookFuncByName failed in dllmain during hooking %s function", SET_WINDOW_LONG_PTR_W);
 

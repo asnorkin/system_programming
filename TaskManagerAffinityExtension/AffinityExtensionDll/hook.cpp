@@ -104,7 +104,7 @@ bool drawAffinityByPID(HWND hWnd, int pidColNum) {
 		if (!getAffinity(pid, affBuf, cpuNum))
 			InfoLogRet(false, "getAffinity failed in drawAffinityByPID");
 
-		int affinityCol = getListViewNumOfCols(hWnd);
+		int affinityCol = getListViewNumOfCols(hWnd) - 1;  // -1 because of affinity column itself
 		ListView_SetItemText(hWnd, iItem, affinityCol, affBuf);
 	}
 
@@ -117,12 +117,9 @@ bool getAffinity(int pid, PWCHAR affBuf, int cpuNum) {
 
 	DWORD_PTR processAffinityMask = 0, systemAffinityMask = 0;
 	GetProcessAffinityMask(hProcess, &processAffinityMask, &systemAffinityMask);
-	InfoLog("PID: %d, affinity: %d\n", pid, processAffinityMask);
 
 	for (int i = 0; i < cpuNum; ++i) {
 		int curr_bit = processAffinityMask & 0x1;
-		if (pid == 644)
-			InfoLog("%%%%%%%%%%    644: %d", curr_bit);
 		affBuf[i] = curr_bit != 0 ? '+' : '-';
 		processAffinityMask = processAffinityMask >> 1;
 	}
@@ -133,5 +130,13 @@ bool getAffinity(int pid, PWCHAR affBuf, int cpuNum) {
 
 
 int getListViewNumOfCols(HWND hWnd) {
-	return COLUMNS_NUM;
+	HWND hWndHdr = ListView_GetHeader(hWnd);
+	if (!hWndHdr)
+		InfoLog("ListView_GetHeader returned NULL in getListViewNumOfCols");
+
+	int numOfCols = Header_GetItemCount(hWndHdr);
+	if (numOfCols == -1)
+		InfoLog("Header_getItemCount failed in getListViewNumOfCols");
+
+	return numOfCols;
 }

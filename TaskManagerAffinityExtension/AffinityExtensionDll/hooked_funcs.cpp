@@ -46,7 +46,8 @@ HookedSendMessageW(
 		numOfInitializedCols++;
 
 		int colsNum = getListViewNumOfCols(hWnd);
-		if (numOfInitializedCols < colsNum)
+		InfoLog("####   cols: %d, init_cols: %d", colsNum, numOfInitializedCols);
+		if (numOfInitializedCols < DEFAULT_COLUMNS_NUM)
 			goto end_hook;
 
 		if (!addAffinityColumn(hWnd, colsNum))
@@ -61,7 +62,6 @@ HookedSendMessageW(
 
 	// Refresh the data
 	if (is_hListView_got && hWnd == g_hListView && Msg == WM_SETREDRAW) {
-		//InfoLog("##########    Refreshing column");
 		if (!drawAffinityByPID(hWnd, PID_COL_NUM))
 			InfoLog("drawAffinityByPID failed in HookedSendMessageW");
 	}

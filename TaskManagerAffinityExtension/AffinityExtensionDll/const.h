@@ -11,7 +11,7 @@
 #define PROCESSES L"Processes"
 
 
-#define COLUMNS_NUM 7
+#define DEFAULT_COLUMNS_NUM 7
 #define PID_COL_NUM 1 // Enumerated from 0
 
 
